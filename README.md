@@ -7,21 +7,21 @@
 1. `virtualenv -p python3 venv`
 2. `source venv/bin/activate`
 3. Устанавливаем python зависимости:
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 4. Для корректной работы библиотеки `pdfkit` требуется установить пакет `wkhtmltopdf`:
-   ```
+   ```bash
    sudo apt-get install wkhtmltopdf  
    ```
    или же на MacOS:
-   ```
+   ```bash
    brew install Caskroom/cask/wkhtmltopdf 
    ```
 
 ## Запуск
 
-```
+```bash
 $ python convert.py -h
 usage: convert.py [-h] [--json JSON] csv
 
@@ -37,7 +37,7 @@ optional arguments:
 
 Пример:
 
-```
+```bash
 $ python convert.py test.csv
 $ python convert.py test.csv --json custom_config.json
 ```
@@ -62,7 +62,7 @@ $ python convert.py test.csv --json custom_config.json
     "grade_for_4": 80, /* минимальный балл на хорошо */
     "grade_for_5": 95, /* минимальный балл на отлично */
     "cert_date": "now", /* дата выдачи сертификата: now - берётся текущая дата */
-	"cert_num_from": 1, /* стартовый номер сертификата, с которого начинается генерация */
+    "cert_num_from": 1, /* стартовый номер сертификата, с которого начинается генерация */
     "cert_options": { /* опции генерации сертификата, подробнее см. https://wkhtmltopdf.org/usage/wkhtmltopdf.txt */
     	"margin-top": "0",
     	"margin-right": "0",
