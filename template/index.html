@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ result_path }}</title>
+<meta charset="utf-8">
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 10px;
+	text-rendering: optimizeLegibility;
+	width: 1920px;
+	font-family: sans-serif;
+}
+.cert {
+	height: 1343px;
+	background: url('{{ path_to_template_dir }}background.png') no-repeat;
+	background-size: cover;
+}
+.left-part {
+	top: 280px;
+	left: 114px;
+	position: absolute;
+	font-weight: normal;
+	color: rgb(101, 98, 99);
+	font-size: 40px;
+	width: 1200px;
+	line-height: 1.8;
+	display: inline-block;
+}
+.right-part {
+	top: 280px;
+	left: 1400px;
+	position: absolute;
+	display: inline-block;
+	width: 365px;
+	text-align: center;
+	color: rgb(101, 98, 99);
+}
+.fio {
+	font-size: 52px;
+	font-weight: bold;
+}
+.course-name {
+	font-size: 60px;
+	font-weight: bold;
+	color: rgb(69, 113, 192);
+	padding-top: 30px;
+}
+.volume {
+	padding-top: 30px;
+}
+.descr-block {
+	padding-top: 100px;
+}
+.descr {
+	font-size: 25px;
+	padding-top: 30px;
+	font-weight: lighter;
+}
+.cert-title {
+	padding-top: 130px;
+    font-size: 32px;
+}
+.lector {
+	padding-top: 127px;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.5;
+}
+.lector-title {
+	color: rgb(145, 143, 143);
+}
+.lector-fio {
+	padding-top: 5px;
+	color: rgb(35, 31, 32);
+}
+.mp {
+	padding-top: 110px;
+}
+</style>
+</head>
+<body>
+<div class="cert">
+	<div class="left-part">
+		<div>Сертификат подтверждает, что</div>
+		<div class="fio">{{ fio_br }}</div>
+		<div>успешно окончил(а) курс</div>
+		<div class="course-name">{{ course_name }}</div>
+		<div class="volume">Объем курса: {{ course_volume }}</div>
+		<div class="grade-title">Оценка: {{ grade_title }}</div>
+		<div class="descr-block">
+			<div class="descr">Описание курса и системы оценивания приведены по ссылке:<br />{{ course_link }}</div>
+			<div class="descr">Дата выдачи: {{ cert_date }}<br />Электронная версия сертификата № <strong>{{ course_num }}-{{ cert_num }}</strong></div>
+		</div>
+	</div>
+	<div class="right-part">
+		<div class="cert-title">Сертификат</div>
+		<div class="lector">
+			<div class="lector-title">{{ lector_title }}</div>
+			<div class="lector-fio">{{ lector_fio }}</div>
+		</div>
+		<div class="mp">М.П.</div>
+	</div>
+</div>
+</body>
+</html>
