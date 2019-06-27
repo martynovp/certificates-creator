@@ -13,7 +13,7 @@ body {
 }
 .cert {
 	height: 1343px;
-	background: url('{{ path_to_template_dir }}background.png') no-repeat;
+	background: url('{{ path_to_template_dir }}{{ background }}') no-repeat;
 	background-size: cover;
 }
 .left-part {
@@ -46,11 +46,14 @@ body {
 	color: rgb(69, 113, 192);
 	padding-top: 30px;
 }
+.bold{
+	font-weight: bold;
+}
 .volume {
 	padding-top: 30px;
 }
 .descr-block {
-	padding-top: 100px;
+	padding-top: 70px;
 }
 .descr {
 	font-size: 25px;
@@ -86,15 +89,16 @@ body {
 		<div class="fio">{{ fio_br }}</div>
 		<div>успешно окончил(а) курс</div>
 		<div class="course-name">{{ course_name }}</div>
-		<div class="volume">Объем курса: {{ course_volume }}</div>
-		<div class="grade-title">Оценка: {{ grade_title }}</div>
+		<div class="volume"><span class="bold">Объем курса:</span> {{ course_volume }}</div>
+		<div class="grade-value"><span class="bold">Набранные баллы:</span> {{ grade_value }} из 100</div>
+		<div class="grade-title"><span class="bold">Оценка:</span> {{ grade_title }}</div>
 		<div class="descr-block">
 			<div class="descr">Описание курса и системы оценивания приведены по ссылке:<br />{{ course_link }}</div>
-			<div class="descr">Дата выдачи: {{ cert_date }}<br />Электронная версия сертификата № <strong>{{ course_num }}-{{ cert_num }}</strong></div>
+			<div class="descr"><div class="date-issue"><span class="bold">Дата выдачи:</span> {{ cert_date }}</div><br />Электронная версия сертификата № <strong>{{ course_num }}-{{ cert_num }}</strong></div>
 		</div>
 	</div>
 	<div class="right-part">
-		<div class="cert-title">Сертификат</div>
+		<div class="cert-title">&nbsp;</div>
 		<div class="lector">
 			<div class="lector-title">{{ lector_title }}</div>
 			<div class="lector-fio">{{ lector_fio }}</div>

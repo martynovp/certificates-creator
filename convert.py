@@ -52,10 +52,14 @@ if __name__ == '__main__':
         f.close()
 
     path_to_result_dir = cnf['path_to_result_dir']
+    path_to_background = cnf['path_to_background']
 
     if path_to_result_dir:
         if not os.path.isdir(path_to_result_dir):
-            raise Exception("Директория для сохранения PDF сертификатов не найдена")
+            try:
+                os.makedirs(path_to_result_dir)
+            except Exception as e:
+                raise Exception("Директория для сохранения PDF сертификатов не найдена, создать не удалось")
         path_to_result_dir = os.path.realpath(path_to_result_dir)
     else:
         path_to_result_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -64,6 +68,10 @@ if __name__ == '__main__':
     grade_for_3 = cnf['grade_for_3']
     grade_for_4 = cnf['grade_for_4']
     grade_for_5 = cnf['grade_for_5']
+
+    min_grade_for_exam = float(cnf['min_grade_for_exam'])
+    title_row_for_exam = cnf['title_row_for_exam']
+
     cert_date = cnf['cert_date']
     if not cert_date or cert_date == 'now':
         cert_date = datetime.datetime.now().strftime('%d.%m.%Y')
@@ -75,6 +83,7 @@ if __name__ == '__main__':
     username_idx = 0
     cert_grade_idx = 0
     cert_num_idx = 0
+    title_row_for_exam_idx = 0
     grade_idx = 0
     start_cert_num_from = int(cnf['cert_num_from'])
     cert_col_exists = True
@@ -106,6 +115,7 @@ if __name__ == '__main__':
                 grade_idx = row.index('Grade')
                 cert_grade_idx = row.index('Certificate Grade')
                 cert_num_idx = row.index('Certificate Num')
+                title_row_for_exam_idx = row.index(title_row_for_exam)
             else:
                 if not cert_col_exists:
                     row.append('')
@@ -126,7 +136,8 @@ if __name__ == '__main__':
         if i == 0:
             continue
         grade = float(item[grade_idx]) * 100
-        if not item[cert_num_idx] and grade_for_3 <= grade:
+        user_grade_for_exam = float(item[title_row_for_exam_idx])
+        if not item[cert_num_idx] and grade_for_3 <= grade and min_grade_for_exam < user_grade_for_exam:
             with tempfile.NamedTemporaryFile(dir=path_to_template_dir) as temp:
                 fio = item[username_idx]
                 fio_br = item[username_idx]
@@ -165,11 +176,13 @@ if __name__ == '__main__':
                     .replace('{{ course_link }}', template_variables['course_link'])\
                     .replace('{{ lector_title }}', template_variables['lector_title'])\
                     .replace('{{ lector_fio }}', template_variables['lector_fio'])\
+                    .replace('{{ grade_value }}', str(int(grade)))\
                     .replace('{{ grade_title }}', grade_title)\
                     .replace('{{ cert_date }}', cert_date)\
                     .replace('{{ cert_num }}', cert_num)\
                     .replace('{{ result_path }}', result_path)\
-                    .replace('{{ path_to_template_dir }}', path_to_template_dir + os.sep)
+                    .replace('{{ path_to_template_dir }}', path_to_template_dir + os.sep)\
+                    .replace('{{ background }}', path_to_background )
 
                 temp.write(tpl.encode())
                 temp.flush()

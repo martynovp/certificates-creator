@@ -1,17 +1,20 @@
 {
+    "path_to_background": "background.png",
     "path_to_template": "template/index.html",
     "path_to_result_dir": "result",
     "template_variables": {
-    	"course_name": "Теория игр",
-    	"course_volume": "3 з.е.",
-    	"course_link": "test.ru/course/mipt/GAMETH",
-    	"course_num": "V001",
-    	"lector_title": "Проректор МФТИ по учебной работе и довузовской подготовке",
-    	"lector_fio": "Иванов Иван Иванович"
+		"course_name": "Теоретическая механика",
+		"course_volume": "4 з.е.",
+		"course_link": "openedu.ru/course/mipt/THMECH",
+		"course_num": "V001",
+		"lector_title": "Проректор МФТИ по учебной работе и довузовской подготовке",
+		"lector_fio": "Иванов Иван Иванович"
     },
     "grade_for_3": 60,
     "grade_for_4": 80,
     "grade_for_5": 95,
+    "min_grade_for_exam": 0.1,
+    "title_row_for_exam": "Final Exam (Avg)",
     "cert_date": "now",
 	"cert_num_from": 1,
     "cert_options": {
