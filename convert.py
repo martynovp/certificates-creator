@@ -95,6 +95,7 @@ if __name__ == '__main__':
     grade_idx = 0
     start_cert_num_from = int(cnf['cert_num_from'])
     cert_col_exists = True
+    print(platform.system().lower())
     is_win = 'window' in platform.system().lower()
 
     data = []
@@ -174,13 +175,14 @@ if __name__ == '__main__':
                     grade_title = "отлично"
 
                 cert_num = '{:05}'.format(start_cert_num_from)
-                result_path = os.path.join(path_to_result_dir,
-                                           fio + ' ' + template_variables['course_num'] + '-' + cert_num + '.pdf')
-
                 if is_win:
                     path_to_template_dir_escaped = path_to_template_dir.replace('\\', '\\\\') + '\\\\'
+                    fio = item[username_idx]
                 else:
                     path_to_template_dir_escaped = path_to_template_dir
+
+                result_path = os.path.join(path_to_result_dir,
+                                           fio + ' ' + template_variables['course_num'] + '-' + cert_num + '.pdf')
 
                 tpl = template_content.replace('{{ fio }}', fio)\
                     .replace('{{ fio_br }}', fio_br)\
