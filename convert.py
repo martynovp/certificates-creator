@@ -5,17 +5,25 @@ import datetime
 import csv
 import json
 import tempfile
+import platform
 import subprocess
 import os
 import sys
+import re
 
 
 def rewrite_csv(csv_file, csv_data):
     print('Идет перезапись CSV...')
-    with open(csv_file, mode='w') as csv_f:
+    with open(csv_file, mode='w', encoding="utf8") as csv_f:
         csv_f_writer = csv.writer(csv_f, delimiter=',')
         for csv_item in csv_data:
             csv_f_writer.writerow(csv_item)
+
+
+def purge(dir, pattern):
+    for f in os.listdir(dir):
+        if re.search(pattern, f):
+            os.remove(os.path.join(dir, f))
 
 
 if __name__ == '__main__':
@@ -29,7 +37,7 @@ if __name__ == '__main__':
     if not os.path.isfile(args.json):
         raise Exception("JSON файл с настройками не найден")
 
-    f = open(args.json)
+    f = open(args.json, encoding="utf8")
     cnf_str = f.read()
     f.close()
 
@@ -47,7 +55,7 @@ if __name__ == '__main__':
     else:
         path_to_template = os.path.abspath(cnf['path_to_template'])
         path_to_template_dir = os.path.dirname(path_to_template)
-        f = open(path_to_template)
+        f = open(path_to_template, encoding="utf8")
         template_content = f.read()
         f.close()
 
@@ -87,13 +95,14 @@ if __name__ == '__main__':
     grade_idx = 0
     start_cert_num_from = int(cnf['cert_num_from'])
     cert_col_exists = True
+    is_win = 'window' in platform.system().lower()
 
     data = []
     first = False
 
     print('Обрабатываем файл: ' + args.csv)
 
-    with open(args.csv) as f:
+    with open(args.csv, encoding="utf8") as f:
         reader = csv.reader(f)
         for row in reader:
             if not first:
@@ -103,7 +112,7 @@ if __name__ == '__main__':
                     cert_col_exists = False
                 if 'Certificate Num' not in row:
                     row.append('Certificate Num')
-                if 'Last Name' in row or 'First Name' in row or 'Second Name' in row:
+                if 'Last Name' in row or 'First Name' in row or 'Second Name' in row and is_win is False:
                     use_full_name = True
                     if 'Last Name' in row:
                         last_name_idx = row.index('Last Name')
@@ -138,7 +147,7 @@ if __name__ == '__main__':
         grade = float(item[grade_idx]) * 100
         user_grade_for_exam = float(item[title_row_for_exam_idx])
         if not item[cert_num_idx] and grade_for_3 <= grade and min_grade_for_exam < user_grade_for_exam:
-            with tempfile.NamedTemporaryFile(dir=path_to_template_dir) as temp:
+            with tempfile.NamedTemporaryFile(dir=path_to_template_dir, delete=False) as temp:
                 fio = item[username_idx]
                 fio_br = item[username_idx]
                 if use_full_name:
@@ -168,6 +177,11 @@ if __name__ == '__main__':
                 result_path = os.path.join(path_to_result_dir,
                                            fio + ' ' + template_variables['course_num'] + '-' + cert_num + '.pdf')
 
+                if is_win:
+                    path_to_template_dir_escaped = path_to_template_dir.replace('\\', '\\\\') + '\\\\'
+                else:
+                    path_to_template_dir_escaped = path_to_template_dir
+
                 tpl = template_content.replace('{{ fio }}', fio)\
                     .replace('{{ fio_br }}', fio_br)\
                     .replace('{{ course_name }}', template_variables['course_name'])\
@@ -182,12 +196,14 @@ if __name__ == '__main__':
                     .replace('{{ cert_num }}', cert_num)\
                     .replace('{{ result_path }}', result_path)\
                     .replace('{{ path_to_template_dir }}', path_to_template_dir + os.sep)\
-                    .replace('{{ background }}', path_to_background )
+                    .replace('{{ background }}', path_to_background)\
+                    .replace('{{ path_to_template_dir_escaped }}', path_to_template_dir_escaped)
 
                 temp.write(tpl.encode())
                 temp.flush()
 
-                subprocess.call(sys.executable + ' worker.py ' + temp.name + ' --json ' + args.json, shell=True)
+                subp = '"' + sys.executable + '"' + ' worker.py ' + '"' + temp.name + '"' + ' --json ' + args.json
+                subprocess.call(subp, shell=True)
 
                 data[i][cert_grade_idx] = grade_title
                 data[i][cert_num_idx] = template_variables['course_num'] + '-' + cert_num
@@ -196,4 +212,5 @@ if __name__ == '__main__':
 
                 rewrite_csv(args.csv, data)
 
+    purge(path_to_template_dir, 'tmp')
     print('Закончили')
