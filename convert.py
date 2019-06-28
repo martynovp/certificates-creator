@@ -158,11 +158,11 @@ if __name__ == '__main__':
                         fio = fio + item[last_name_idx] + ' '
                         fio_br = fio_br + item[last_name_idx] + ' '
                     if first_name_idx is not None and item[first_name_idx] != 'None':
+                        if fio_br:
+                            fio_br = fio_br + '<br />'
                         fio = fio + item[first_name_idx] + ' '
                         fio_br = fio_br + item[first_name_idx] + ' '
                     if second_name_idx is not None and item[second_name_idx] != 'None':
-                        if fio_br:
-                            fio_br = fio_br + '<br />'
                         fio = fio + item[second_name_idx]
                         fio_br = fio_br + item[second_name_idx]
 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
                     path_to_template_dir_escaped = path_to_template_dir.replace('\\', '\\\\') + '\\\\'
                     fio = item[username_idx]
                 else:
-                    path_to_template_dir_escaped = path_to_template_dir
+                    path_to_template_dir_escaped = path_to_template_dir + '/'
 
                 result_path = os.path.join(path_to_result_dir,
                                            fio + ' ' + template_variables['course_num'] + '-' + cert_num + '.pdf')
